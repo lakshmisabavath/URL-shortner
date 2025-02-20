@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortened Successfully ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --success-color: #10b981;
+            --background: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-color: #1e293b;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f6f8ff 0%, #e9eeff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 2.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+            animation: bounce 1s ease;
+        }
+
+        .url-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .url-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem 2rem;
+            background: var(--success-color);
+            color: white;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .action-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: center;">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h2 style="margin: 0.5rem 0;">URL Shortened Successfully!</h2>
+        </div>
+
+        {% if short_url %}
+        <div class="url-card">
+            <p style="margin: 0 0 0.5rem;">Your shortened URL:</p>
+            <a href="{{ short_url }}" id="short-url" style="font-size: 1.2rem;">{{ short_url }}</a>
+        </div>
+
+        <div class="button-group">
+            <button class="action-button" onclick="copyToClipboard()">
+                <i class="fas fa-copy"></i> Copy URL
+            </button>
+            <button class="action-button" onclick="shareURL()">
+                <i class="fas fa-share-alt"></i> Share
+            </button>
+            <button class="action-button" onclick="generateQRCode()">
+                <i class="fas fa-qrcode"></i> QR Code
+            </button>
+        </div>
+
+        <div id="qr-code" style="text-align: center; margin-top: 1rem;"></div>
+
+        <div class="analytics-card">
+            <h3 style="margin: 0 0 1rem;"><i class="fas fa-chart-line"></i> Analytics</h3>
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <div class="stat-value">23</div>
+                    <div>Total Clicks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div>Countries</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">60%</div>
+                    <div>Mobile</div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <p style="color: #ef4444; text-align: center;">An error occurred. Please try again.</p>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('index') }}" class="action-button">
+                <i class="fas fa-plus"></i> Shorten Another URL
+            </a>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function copyToClipboard() {
+            const copyText = document.getElementById("short-url").innerText;
+            navigator.clipboard.writeText(copyText).then(() => {
+                showToast('Copied to clipboard!');
+            }).catch(err => {
+                showToast('Failed to copy');
+            });
+        }
+
+        function shareURL() {
+            const shareText = document.getElementById("short-url").innerText;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Shortened URL',
+                    text: 'Check out this shortened URL:',
+                    url: shareText
+                }).then(() => {
+                    showToast('Shared successfully!');
+                }).catch(err => {
+                    showToast('Failed to share');
+                });
+            } else {
+                copyToClipboard();
+            }
+        }
+
+        function generateQRCode() {
+            const qrText = document.getElementById("short-url").href; // Use href instead of innerText
+            const qrCodeContainer = document.getElementById("qr-code");
+            qrCodeContainer.innerHTML = "";
+            
+            // Create new QR code with optimized settings for mobile scanning
+            new QRCode(qrCodeContainer, {
+                text: qrText,
+                width: 256,  // Optimal size for mobile scanning
+                height: 256,
+                colorDark: "#000000", // Standard black for better contrast
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H,
+                margin: 4, // Add margin for better scanning
+                quietZone: 15 // Add quiet zone around QR code
+            });
+        
+            // Add download button with high-resolution QR code
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'action-button';
+            downloadBtn.style.marginTop = '1rem';
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download QR Code';
+            downloadBtn.onclick = () => {
+                // Create high-resolution QR code for download
+                const canvas = qrCodeContainer.querySelector('canvas');
+                const image = canvas.toDataURL("image/png", 1.0);
+                const link = document.createElement('a');
+                link.href = image;
+                link.download = 'qrcode-' + Date.now() + '.png';
+                link.click();
+            };
+            qrCodeContainer.appendChild(downloadBtn);
+        
+            // Add a test link below QR code
+            const testLink = document.createElement('p');
+            testLink.style.marginTop = '0.5rem';
+            testLink.style.fontSize = '0.9rem';
+            testLink.innerHTML = `Test URL: <a href="${qrText}" target="_blank">${qrText}</a>`;
+            qrCodeContainer.appendChild(testLink);
+        }
+    </script>
+</body>
+</html>
